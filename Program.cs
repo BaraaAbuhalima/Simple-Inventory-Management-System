@@ -1,59 +1,36 @@
 ﻿class Program
 {
+    static ProductInventory productInventory = new();
     static void Main(string[] args)
     {
-        ProductInventory productInventory = new();
         bool exit = false;
         while (!exit)
         {
             Console.WriteLine("Simple Inventory Management System");
             Console.WriteLine("=================================");
-            Console.WriteLine("1. Add a product");
-            Console.WriteLine("2. View all products");
-            Console.WriteLine("3. Edit a product");
-            Console.WriteLine("4. Delete a product");
-            Console.WriteLine("5. Search for a product");
-            Console.WriteLine("6. Exit");
-            Console.Write("Select an option (1-6): ");
-
-            string? input = Console.ReadLine();
-
-            switch (input)
-            {
-                case "1":
-                    AddProduct(productInventory);
-                    break;
-                case "2":
-                    ViewAllProducts(productInventory);
-                    break;
-                default:
-                    Console.WriteLine("Invalid input, please try again.");
-                    exit = true;
-                    break;
-            }
+            List<OutputChoice> outputChoicesList = new();
+            outputChoicesList.Add(new OutputChoice { Message = "Add a product", CallBack = AddProduct });
+            outputChoicesList.Add(new OutputChoice { Message = "View all products", CallBack = ViewAllProducts });
+            outputChoicesList.Add(new OutputChoice { Message = "Edit a product ", CallBack = EditProduct });
+            outputChoicesList.Add(new OutputChoice { Message = "Delete a product", CallBack = DeleteProduct });
+            outputChoicesList.Add(new OutputChoice { Message = "Search For A Product", CallBack = SearchProduct });
+            OutputHelper.DisplayOutputChoices(outputChoicesList);
         }
     }
-    public static void AddProduct(ProductInventory productInventory)
+    public static void AddProduct()
     {
-        string name = ProductInputHelper.ReadProductName();
-        int price = ProductInputHelper.ReadProductPrice();
-        int quantity = ProductInputHelper.ReadProductQuantity();
+        string name = InputHelper.ReadProductName();
+        int addingResult = 0;
+        if (!productInventory.Contain(name))
+        {
+        int price = InputHelper.ReadProductPrice();
+        int quantity = InputHelper.ReadProductQuantity();
         Product product = new(name, price, quantity);
-        int AddingResult = productInventory.Add(product);
-        if (AddingResult == 1)
-        {
-            Console.WriteLine("Successfully Added");
+         addingResult = productInventory.Add(product);
         }
-        else if (AddingResult == 0)
-        {
-            Console.WriteLine("Item Already Exist");
-        }
-        else if (AddingResult == -1)
-        {
-            Console.WriteLine("Error Trying to add a null item");
-        }
+        Console.WriteLine(addingResult == 1 ? "Successfully Added" : "Item Already Exist");
     }
-    public static void ViewAllProducts(ProductInventory productInventory)
+    public static void ViewAllProducts()
     {
         var productsList = productInventory.All();
         if (productsList.Count == 0)
@@ -61,15 +38,62 @@
             Console.WriteLine("The Product Inventory is Empty");
             return;
         }
-        Console.WriteLine("Products List : \n");
-
-        for (int i = 0; i < productsList.Count; i++)
-        {
-            Console.WriteLine(productsList[i]);
-        }
+        Console.WriteLine(productInventory);
     }
- 
-    
 
+    public static void DeleteProduct()
+    {
+        string name = InputHelper.ReadProductName();
+        bool found = productInventory.Delete(name);
+        Console.WriteLine(found ? "Successfully Deleted" : "No product has been found with this name ");
+    }
+    public static void SearchProduct()
+    {
+        string name = InputHelper.ReadProductName();
+        Product? product = productInventory.Search(name);
+        Console.WriteLine(product == null ? "No Product Has Been Found With This name" : product);
+    }
+     public static void EditProduct()
+    {
+        string name = InputHelper.ReadProductName();
+        Product ?product = productInventory.Search(name);
+        if (product == null)
+        {
+            Console.WriteLine("No Product has Been found with this name");
+            return;
+        }
 
+        List<OutputChoice> outputChoicesList = new();
+        outputChoicesList.Add(new OutputChoice
+        {
+            Message = "Price",
+            CallBack = () =>
+            {
+                  product.Price = InputHelper.ReadProductPrice();
+            }
+        });
+
+        outputChoicesList.Add(new OutputChoice
+        {
+            Message = "Quantity",
+            CallBack = () =>
+            {
+                  product.Quantity = InputHelper.ReadProductQuantity();
+            }
+        });
+
+        outputChoicesList.Add(new OutputChoice
+        {
+            Message = "Both Price and Quantity",
+            CallBack = () =>
+            {
+                product.Price = InputHelper.ReadProductPrice();
+                product.Quantity = InputHelper.ReadProductQuantity();
+            }
+        });
+
+        outputChoicesList.Add(new OutputChoice { Message = "Cancel / Exit", CallBack = () => { } });
+
+        OutputHelper.DisplayOutputChoices(outputChoicesList);
+    }
 }

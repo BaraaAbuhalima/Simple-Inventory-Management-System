@@ -13,7 +13,6 @@ abstract class Inventory<K, T> where K : notnull where T : Item<K>
         try
         {
             ArgumentNullException.ThrowIfNull(item);
-
         }
         catch (Exception e)
         {
@@ -27,7 +26,12 @@ abstract class Inventory<K, T> where K : notnull where T : Item<K>
         InventoryTree.Add(item.Key, item);
         return (int)InventoryAddItem.Success;
     }
-    public int Size()
+    public List<T> All()
+    {
+        return InventoryTree.Values.ToList();
+        
+    }   
+     public int Size()
     {
         return InventoryTree.Count;
     }

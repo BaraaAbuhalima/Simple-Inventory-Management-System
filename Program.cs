@@ -23,6 +23,9 @@
                 case "1":
                     AddProduct(productInventory);
                     break;
+                case "2":
+                    ViewAllProducts(productInventory);
+                    break;
                 default:
                     Console.WriteLine("Invalid input, please try again.");
                     exit = true;
@@ -50,6 +53,22 @@
             Console.WriteLine("Error Trying to add a null item");
         }
     }
+    public static void ViewAllProducts(ProductInventory productInventory)
+    {
+        var productsList = productInventory.All();
+        if (productsList.Count == 0)
+        {
+            Console.WriteLine("The Product Inventory is Empty");
+            return;
+        }
+        Console.WriteLine("Products List : \n");
+
+        for (int i = 0; i < productsList.Count; i++)
+        {
+            Console.WriteLine(productsList[i]);
+        }
+    }
+ 
     
 
 

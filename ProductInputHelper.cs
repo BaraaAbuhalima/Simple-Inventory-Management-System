@@ -11,6 +11,7 @@ static class  ProductInputHelper{
         try
         {
             string? input = Console.ReadLine();
+            ArgumentNullException.ThrowIfNull(input);
             int number = int.Parse(input);
             return number;
         }

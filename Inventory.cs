@@ -1,4 +1,4 @@
-
+using System.Diagnostics;
 abstract class Inventory<K, T> where K : notnull where T : Item<K>
 {
     private readonly SortedDictionary<K, T> InventoryTree;
@@ -35,5 +35,29 @@ abstract class Inventory<K, T> where K : notnull where T : Item<K>
     {
         return InventoryTree.Count;
     }
+    public void Edit(K Key, T item)
+    {
+        if (InventoryTree.ContainsKey(Key))
+        {
+            InventoryTree[Key] = item;
+        }
 
+    }
+    public bool Delete(K Key)
+    {
+        return InventoryTree.Remove(Key);
+    }
+    public bool Delete(T item)
+    {
+        return InventoryTree.Remove(item.Key);
+    }
+    public virtual T? Search(K Key)
+    {
+        return InventoryTree.TryGetValue(Key, out T? value) ? value : null;
+
+    }
+    public bool Contain(K Key)
+    {
+        return InventoryTree.ContainsKey(Key);
+    }
 }

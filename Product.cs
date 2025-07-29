@@ -1,12 +1,16 @@
-
 using System.Diagnostics.CodeAnalysis;
 
 class Product : Item<string>
 {
+    private string _name = "";
     public required string Name
     {
-        get => Key;
-        set => Key = value;
+        get => _name;
+        set
+        {
+            _name = value;
+            Key = value;
+        }
     }
     public required int Price { get; set; }
     public required int Quantity { get; set; }

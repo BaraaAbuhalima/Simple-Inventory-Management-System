@@ -1,63 +1,65 @@
 using System.Diagnostics;
-abstract class Inventory<K, T> where K : notnull where T : Item<K>
+using System.Text;
+
+abstract class Inventory<TKey, TValue> where TKey: notnull where TValue: Item<TKey>
 {
-    private readonly SortedDictionary<K, T> InventoryTree;
-    public Inventory()
+    private readonly SortedDictionary<TKey, TValue> _inventoryTree=[];
+    public bool  Add(TValue value)
     {
-        InventoryTree = [];
-
-    }
-    public int Add(T item)
-    {
-
         try
         {
-            ArgumentNullException.ThrowIfNull(item);
+            ArgumentNullException.ThrowIfNull(value);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return (int)InventoryAddItem.Failed;
+            return false;
         }
-        if (InventoryTree.ContainsKey(item.Key))
-        {
-            return (int)InventoryAddItem.AlreadyExists;
-        }
-        InventoryTree.Add(item.Key, item);
-        return (int)InventoryAddItem.Success;
+        return _inventoryTree.TryAdd(value.Key, value);
+         
     }
-    public List<T> All()
+    public List<TValue> All()
     {
-        return InventoryTree.Values.ToList();
+        return _inventoryTree.Values.ToList();
 
     }
     public int Size()
     {
-        return InventoryTree.Count;
+        return _inventoryTree.Count;
     }
-    public void Edit(K Key, T item)
+    public void Edit(TKey key, TValue value)
     {
-        if (InventoryTree.ContainsKey(Key))
+        if (_inventoryTree.ContainsKey(key))
         {
-            InventoryTree[Key] = item;
+            _inventoryTree[key] = value;
         }
 
     }
-    public bool Delete(K Key)
+    public bool Delete(TKey key)
     {
-        return InventoryTree.Remove(Key);
+        return _inventoryTree.Remove(key);
     }
-    public bool Delete(T item)
+    public bool Delete(TValue value)
     {
-        return InventoryTree.Remove(item.Key);
+        return _inventoryTree.Remove(value.Key);
     }
-    public virtual T? Search(K Key)
+    public TValue? Search(TKey key)
     {
-        return InventoryTree.TryGetValue(Key, out T? value) ? value : null;
+        return _inventoryTree.GetValueOrDefault(key);
 
     }
-    public bool Contain(K Key)
+    public bool Contain(TKey key)
     {
-        return InventoryTree.ContainsKey(Key);
+        return _inventoryTree.ContainsKey(key);
+    }
+    public override string ToString()
+    {
+        var arr = this.All();
+        var s = new StringBuilder("");
+        for (var i = 0; i < arr.Count; i++)
+        {
+            s.AppendLine($"{i + 1}.  {arr[i]}");
+        }
+        return s.ToString();
     }
 }

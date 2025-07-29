@@ -18,16 +18,16 @@ static class InputHelper
     public static int ReadChoice(int left, int right)
     {
         Console.Write($"Select an option ({left}, {right}): ");
-        int x = ReadInteger();
+        var x = ReadInteger();
         return x >= left && x <= right ? x : ReadChoice(left, right);
     }
     private static int ReadInteger()
     {
         try
         {
-            string? input = Console.ReadLine();
+            var input = Console.ReadLine();
             ArgumentNullException.ThrowIfNull(input);
-            int number = int.Parse(input);
+            var number = int.Parse(input);
             return number;
         }
         catch (Exception)
@@ -38,7 +38,7 @@ static class InputHelper
     }
     private static string ReadString()
     {
-         string? input = Console.ReadLine();
+         var input = Console.ReadLine();
         return (input is null) || ((input = input.Trim()) == "") ? ReadProductName() : input;
     }
 }

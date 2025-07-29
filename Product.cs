@@ -1,30 +1,20 @@
 using System.Diagnostics.CodeAnalysis;
-
 class Product : Item<string>
 {
-    private string _name = "";
-    public required string Name
-    {
-        get => _name;
-        set
-        {
-            _name = value;
-            Key = value;
-        }
-    }
+    public required string Name { get; set; } 
+    public override string Key => Name;
     public required int Price { get; set; }
     public required int Quantity { get; set; }
-
-    [SetsRequiredMembers]
+    
+   [SetsRequiredMembers]
     public Product(string name, int price, int quantity)
     {
-        Key = name;
         Name = name;
         Price = price;
         Quantity = quantity;
     }
     public override string ToString()
     {
-        return $" Name : {Name} , Pice : {Price} , Quantity : {Quantity}";
+        return $" Name : {Name} , Price : {Price} , Quantity : {Quantity}";
     }
 } 

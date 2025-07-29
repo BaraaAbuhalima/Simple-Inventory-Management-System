@@ -1,3 +1,4 @@
-abstract class Item<T> {
-    public required T Key { get; set; }
+abstract class Item<T>
+{
+     public abstract T Key { get; }
 }

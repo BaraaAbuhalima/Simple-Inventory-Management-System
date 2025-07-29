@@ -6,7 +6,7 @@ static class  ProductInputHelper{
         string name;
         return (input is null) || ((name = input.Trim()) == "") ? ReadProductName() : name;
     }
-    public static int ReadInteger()
+    private static int ReadInteger()
     {
         try
         {

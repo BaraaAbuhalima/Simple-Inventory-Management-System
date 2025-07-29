@@ -29,9 +29,9 @@ abstract class Inventory<K, T> where K : notnull where T : Item<K>
     public List<T> All()
     {
         return InventoryTree.Values.ToList();
-        
-    }   
-     public int Size()
+
+    }
+    public int Size()
     {
         return InventoryTree.Count;
     }
